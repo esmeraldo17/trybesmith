@@ -12,4 +12,9 @@ export default class OrderService {
     const orders = await this.model.getAll();
     return orders;
   }
+
+  public async create(userId: number | undefined, productsIds: number[]) {
+    const orderInserted = await this.model.create(userId, productsIds);
+    return orderInserted;
+  }
 }

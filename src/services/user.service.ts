@@ -3,10 +3,6 @@ import UserModel from '../models/user.model';
 import User from '../interfaces/user.interface';
 import JwtGenerator from './JWT/JwtGenerator';
 
-type UserName = {
-  username: string,
-};
-
 type UserId = {
   id: number,
 };
@@ -25,7 +21,7 @@ export default class UserService {
     return JwtToken;
   }
 
-  public async getIdByUsername(name: UserName): Promise<UserId> {
+  public async getIdByUsername(name: string): Promise<UserId> {
     try {
       const id = await this.model.getIdByUsername(name);
       return { id };

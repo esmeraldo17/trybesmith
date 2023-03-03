@@ -1,10 +1,6 @@
 import { Pool, ResultSetHeader, RowDataPacket, OkPacket } from 'mysql2/promise';
 import User from '../interfaces/user.interface';
 
-type UserName = {
-  username: string,
-};
-
 type ResultType = { id: number }[] & (
   ResultSetHeader | RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[]
 );
@@ -28,7 +24,7 @@ export default class UserModel {
     return { id: insertId, ...user };
   }
 
-  public async getIdByUsername(name: UserName): Promise<number> {
+  public async getIdByUsername(name: string): Promise<number> {
     const [rows] = await this.connection.execute<ResultType>(
       'SELECT id FROM Trybesmith.users WHERE username = (?)',
       [name],

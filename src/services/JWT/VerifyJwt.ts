@@ -4,8 +4,8 @@ import jwt from 'jsonwebtoken';
 import UserService from '../user.service';
 
 type Data = {
-  id?: number,
-  username: string,
+  data: { username: string },
+  iat?: number,
 };
 
 type ReqUser = {
@@ -26,8 +26,10 @@ export default class VerifyJwt {
   
     try {
       const decoded = jwt.verify(token, process.env.JWT_SECRET as string) as Data;
+    
+      const { username } = decoded.data;
   
-      const id = await this.userService.getIdByUsername(decoded);
+      const id = await this.userService.getIdByUsername(username);
 
       req.user = id;
     } catch (err) {
