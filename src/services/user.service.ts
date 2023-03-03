@@ -3,6 +3,14 @@ import UserModel from '../models/user.model';
 import User from '../interfaces/user.interface';
 import JwtGenerator from './JWT/JwtGenerator';
 
+type UserName = {
+  username: string,
+};
+
+type UserId = {
+  id: number,
+};
+
 export default class UserService {
   public model: UserModel;
 
@@ -15,5 +23,14 @@ export default class UserService {
     const payload = { username };
     const JwtToken = JwtGenerator(payload);
     return JwtToken;
+  }
+
+  public async getIdByUsername(name: UserName): Promise<UserId> {
+    try {
+      const id = await this.model.getIdByUsername(name);
+      return { id };
+    } catch (error) {
+      throw new Error(`Usuário '${name}' não encontrado.`);
+    }
   }
 }

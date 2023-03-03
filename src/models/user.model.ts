@@ -1,5 +1,13 @@
-import { Pool, ResultSetHeader } from 'mysql2/promise';
+import { Pool, ResultSetHeader, RowDataPacket, OkPacket } from 'mysql2/promise';
 import User from '../interfaces/user.interface';
+
+type UserName = {
+  username: string,
+};
+
+type ResultType = { id: number }[] & (
+  ResultSetHeader | RowDataPacket[] | RowDataPacket[][] | OkPacket | OkPacket[]
+);
 
 export default class UserModel {
   public connection: Pool;
@@ -18,5 +26,21 @@ export default class UserModel {
 
     const { insertId } = result;
     return { id: insertId, ...user };
+  }
+
+  public async getIdByUsername(name: UserName): Promise<number> {
+    const [rows] = await this.connection.execute<ResultType>(
+      'SELECT id FROM Trybesmith.users WHERE username = (?)',
+      [name],
+    );
+
+    if (rows.length === 0) {
+      throw new Error(`Usuário '${name}' não encontrado.`);
+    }
+    const { id } = rows[0];
+
+    console.log(id);
+
+    return id;
   }
 }
